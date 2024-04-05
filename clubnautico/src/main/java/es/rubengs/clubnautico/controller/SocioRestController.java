@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
+//import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,15 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import es.iespuertodelacruz.rgs.treatplus.paciente.domain.Paciente;
-import es.iespuertodelacruz.rgs.treatplus.paciente.infraestructure.adapter.primary.PacienteDto;
 import es.rubengs.clubnautico.model.Socio;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/api/v1/socios")
 public class SocioRestController {
-
+/*
 	@Autowired
 	SocioService socioService;
 	
@@ -63,5 +61,5 @@ public class SocioRestController {
 	    public ResponseEntity<?> updatePaciente(@RequestBody Socio socio) {
 	        socioService.updateSocio(socio);
 	    }
-	
+	*/
 }
