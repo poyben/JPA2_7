@@ -16,20 +16,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.rubengs.clubnautico.model.Patron;
 import es.rubengs.clubnautico.model.Socio;
-import es.rubengs.clubnautico.service.SocioService;
+import es.rubengs.clubnautico.service.PatronService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/v1/socios")
-public class SocioRestController {
+@RequestMapping("/api/v1/patrones")
+public class PatronRestController {
 
 	@Autowired
-	SocioService socioService;
+	PatronService patronService;
 	
 	@GetMapping
 	public ResponseEntity<?> findAll() {
-		List<Socio> findAll = socioService.findAll();
+		List<Patron> findAll = patronService.findAll();
 		if (findAll != null) {
 			return ResponseEntity.ok(findAll);
 		} else {
@@ -40,7 +41,7 @@ public class SocioRestController {
 	@GetMapping("/{id}")
 	public ResponseEntity<?> findById(@PathVariable int id) {
 	
-		Socio optfindById = socioService.findById(id);
+		Patron optfindById = patronService.findById(id);
 			
 				return ResponseEntity.ok(optfindById);
 			
@@ -48,24 +49,24 @@ public class SocioRestController {
 	
 	@PostMapping
 	@ResponseBody
-	public Socio createSocio(@RequestBody Socio socio) {
-	    return socioService.createSocio(socio);
+	public Patron createPatron(@RequestBody Patron patron) {
+	    return patronService.createPatron(patron);
 	}
 
 	
 	 @DeleteMapping("/{id}")
-	    public void deleteSocio(@PathVariable int id) {
-	       	socioService.deleteSocio(id);
+	    public void deletePatron(@PathVariable int id) {
+	       	patronService.deletePatron(id);
 	    }
 
 	 
 	 @PutMapping("/{id}")
-	 public ResponseEntity<?> updateSocio(@PathVariable int id, @RequestBody Socio socioDetails) {
-		    Socio updatedSocio = socioService.updateSocio(id, socioDetails);
-		    if (updatedSocio != null) {
-		        return ResponseEntity.ok(updatedSocio);
+	 public ResponseEntity<?> updatePatron(@PathVariable int id, @RequestBody Patron patronDetails) {
+		 Patron updatedPatron = patronService.updatePatron(id, patronDetails);
+		    if (updatedPatron != null) {
+		        return ResponseEntity.ok(updatedPatron);
 		    } else {
-		        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Socio no encontrado con ID: " + id);
+		        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patron no encontrado con ID: " + id);
 		    }
 		}
 	
