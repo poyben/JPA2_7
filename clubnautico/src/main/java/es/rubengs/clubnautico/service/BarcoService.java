@@ -15,7 +15,7 @@ public class BarcoService {
 	@Autowired
 	BarcoRepository barcoRepo;
 	
-	public Barco createPatron(Barco barco) {
+	public Barco createBarco(Barco barco) {
 		return barcoRepo.save(barco);
 	}
 	
