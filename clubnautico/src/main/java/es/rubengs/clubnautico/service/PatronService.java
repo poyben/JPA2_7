@@ -2,10 +2,12 @@ package es.rubengs.clubnautico.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.rubengs.clubnautico.dto.PatronDto;
 import es.rubengs.clubnautico.model.Patron;
 import es.rubengs.clubnautico.repository.PatronRepository;
 
@@ -15,31 +17,43 @@ public class PatronService {
 	@Autowired
 	PatronRepository patronRepo;
 	
-	public Patron createPatron(Patron patron) {
-		return patronRepo.save(patron);
-	}
+	public PatronDto createPatron(PatronDto patronDTO) {
+		Patron patron = new Patron();
+	    patron.setNombre(patronDTO.getNombre());
+	    patron.setEmail(patronDTO.getEmail());
+	    Patron savedPatron = patronRepo.save(patron);
+	    return new PatronDto(savedPatron.getId(), savedPatron.getNombre(), savedPatron.getEmail());	
+	    }
 	
 	public void deletePatron(int id) {
 		patronRepo.deleteById(id);
 	}
 	
-	public List<Patron> findAll(){
-		return patronRepo.findAll();
+	public List<PatronDto> findAllDTOs(){
+	    List<Patron> patrons = patronRepo.findAll();
+	    return patrons.stream()
+	                  .map(patron -> new PatronDto(patron.getId(), patron.getNombre(), patron.getEmail()))
+	                  .collect(Collectors.toList());
 	}
 	
-	public Patron findById(int id) {
-		return patronRepo.findById(id).orElse(null);
+	public PatronDto findByIdDTO(int id) {
+	    Optional<Patron> patronOptional = patronRepo.findById(id);
+	    if (patronOptional.isPresent()) {
+	        Patron patron = patronOptional.get();
+	        return new PatronDto(patron.getId(), patron.getNombre(), patron.getEmail());
+	    } else {
+	        return null; // O considera lanzar una excepción personalizada o usar Optional<PatronDto>
+	    }
 	}
-	
-	public Patron updatePatron(int id, Patron patronDetails) {
+	public PatronDto updatePatron(int id, PatronDto patronDetails) {
         Optional<Patron> patronOptional = patronRepo.findById(id);
         if (patronOptional.isPresent()) {
         	Patron existingPatron = patronOptional.get();
             existingPatron.setNombre(patronDetails.getNombre());
             existingPatron.setEmail(patronDetails.getEmail());
-            existingPatron.setSalidas(patronDetails.getSalidas());
+            //existingPatron.setSalidas(patronDetails.getSalidas());
             Patron updatedPatron = patronRepo.save(existingPatron);
-            return updatedPatron;
+            return new PatronDto(updatedPatron.getId(), updatedPatron.getNombre(), updatedPatron.getEmail());
         } else {
             return null;
         }

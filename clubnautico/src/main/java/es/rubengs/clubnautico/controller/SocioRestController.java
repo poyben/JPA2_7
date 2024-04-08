@@ -16,7 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.rubengs.clubnautico.dto.BarcoDto;
+import es.rubengs.clubnautico.dto.SocioDto;
 import es.rubengs.clubnautico.model.Socio;
+import es.rubengs.clubnautico.service.BarcoService;
 import es.rubengs.clubnautico.service.SocioService;
 
 @RestController
@@ -26,10 +29,12 @@ public class SocioRestController {
 
 	@Autowired
 	SocioService socioService;
+	@Autowired
+	BarcoService barcoService;
 	
 	@GetMapping
 	public ResponseEntity<?> findAll() {
-		List<Socio> findAll = socioService.findAll();
+		List<SocioDto> findAll = socioService.findAll();
 		if (findAll != null) {
 			return ResponseEntity.ok(findAll);
 		} else {
@@ -40,7 +45,7 @@ public class SocioRestController {
 	@GetMapping("/{id}")
 	public ResponseEntity<?> findById(@PathVariable int id) {
 	
-		Socio optfindById = socioService.findById(id);
+		SocioDto optfindById = socioService.findById(id);
 			
 				return ResponseEntity.ok(optfindById);
 			
@@ -48,7 +53,7 @@ public class SocioRestController {
 	
 	@PostMapping
 	@ResponseBody
-	public Socio createSocio(@RequestBody Socio socio) {
+	public SocioDto createSocio(@RequestBody SocioDto socio) {
 	    return socioService.createSocio(socio);
 	}
 
@@ -68,5 +73,15 @@ public class SocioRestController {
 		        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Socio no encontrado con ID: " + id);
 		    }
 		}
+	 
+	 @PostMapping("/{id}/barcos")
+	 public ResponseEntity<BarcoDto> addBarcoToSocio(@PathVariable(value = "id") Integer socioId, @RequestBody BarcoDto barcoDto) {
+	     BarcoDto nuevoBarco = barcoService.createBarcoWithSocio(socioId, barcoDto);
+	     if (nuevoBarco != null) {
+	         return new ResponseEntity<>(nuevoBarco, HttpStatus.CREATED);
+	     } else {
+	         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	     }
+	 }
 	
 }

@@ -31,17 +31,17 @@ public class Barco {
 	String numeroMatricula;
 	String nombre;
 	@Column(name="numero_amarre")
-	String numeroAmarre;
+	int numeroAmarre;
 	float cuota;
 	@ManyToOne
     @JoinColumn(name = "socio_id", nullable = false)
-	//@JsonBackReference
+	@JsonBackReference
     private Socio socio;
 	@OneToMany(mappedBy= "barco")
     private List<Salida> salidas;
 	
 	
-	public Barco(int id, String numeroMatricula, String nombre, String numeroAmarre, float cuota, Socio socio
+	public Barco(int id, String numeroMatricula, String nombre, int numeroAmarre, float cuota, Socio socio
 			/*,List<Salida> salidas*/) {
 		this.id = id;
 		this.numeroMatricula = numeroMatricula;

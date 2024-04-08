@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.rubengs.clubnautico.dto.SalidaDto;
 import es.rubengs.clubnautico.model.Salida;
-import es.rubengs.clubnautico.model.Socio;
 import es.rubengs.clubnautico.service.SalidaService;
 
 @RestController
@@ -30,7 +30,7 @@ public class SalidaRestController {
 	
 	@GetMapping
 	public ResponseEntity<?> findAll() {
-		List<Salida> findAll = salidaService.findAll();
+		List<SalidaDto> findAll = salidaService.findAllDtos();
 		if (findAll != null) {
 			return ResponseEntity.ok(findAll);
 		} else {
@@ -41,7 +41,7 @@ public class SalidaRestController {
 	@GetMapping("/{id}")
 	public ResponseEntity<?> findById(@PathVariable int id) {
 	
-		Salida optfindById = salidaService.findById(id);
+		SalidaDto optfindById = salidaService.findByIdDto(id);
 			
 				return ResponseEntity.ok(optfindById);
 			
@@ -49,7 +49,7 @@ public class SalidaRestController {
 	
 	@PostMapping
 	@ResponseBody
-	public Salida createSalida(@RequestBody Salida salida) {
+	public SalidaDto createSalida(@RequestBody SalidaDto salida) {
 	    return salidaService.createSalida(salida);
 	}
 
@@ -61,8 +61,8 @@ public class SalidaRestController {
 
 	 
 	 @PutMapping("/{id}")
-	 public ResponseEntity<?> updateSalida(@PathVariable int id, @RequestBody Salida salidaDetails) {
-		    Salida updatedSalida = salidaService.updateSalida(id, salidaDetails);
+	 public ResponseEntity<?> updateSalida(@PathVariable int id, @RequestBody SalidaDto salidaDetails) {
+		    SalidaDto updatedSalida = salidaService.updateSalida(id, salidaDetails);
 		    if (updatedSalida != null) {
 		        return ResponseEntity.ok(updatedSalida);
 		    } else {

@@ -27,14 +27,14 @@ public class Socio {
 	String nombre;
 	String email;
 	@OneToMany(mappedBy = "socio")
-	//@JsonManagedReference
+	@JsonManagedReference
     private List<Barco> barcos;
 	
-	public Socio(int id, String nombre, String email/*, List<Barco> barcos*/) {
+	public Socio(int id, String nombre, String email, List<Barco> barcos) {
 		this.id = id;
 		this.nombre = nombre;
 		this.email = email;
-		//this.barcos = barcos;
+		this.barcos = barcos;
 	}
 	
 	public Socio() {

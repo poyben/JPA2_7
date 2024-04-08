@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.rubengs.clubnautico.dto.BarcoDto;
 import es.rubengs.clubnautico.model.Barco;
-import es.rubengs.clubnautico.model.Patron;
 import es.rubengs.clubnautico.service.BarcoService;
 
 @RestController
@@ -30,7 +30,7 @@ public class BarcoRestController {
 	
 	@GetMapping
 	public ResponseEntity<?> findAll() {
-		List<Barco> findAll = barcoService.findAll();
+		List<BarcoDto> findAll = barcoService.findAll();
 		if (findAll != null) {
 			return ResponseEntity.ok(findAll);
 		} else {
@@ -41,7 +41,7 @@ public class BarcoRestController {
 	@GetMapping("/{id}")
 	public ResponseEntity<?> findById(@PathVariable int id) {
 	
-		Barco optfindById = barcoService.findById(id);
+		BarcoDto optfindById = barcoService.findById(id);
 			
 				return ResponseEntity.ok(optfindById);
 			
@@ -59,8 +59,8 @@ public class BarcoRestController {
     }
 	
 	@PutMapping("/{id}")
-	 public ResponseEntity<?> updateBarco(@PathVariable int id, @RequestBody Barco barcoDetails) {
-		 Barco updatedBarco = barcoService.updateBarco(id, barcoDetails);
+	 public ResponseEntity<?> updateBarco(@PathVariable int id, @RequestBody BarcoDto barcoDetails) {
+		 BarcoDto updatedBarco = barcoService.updateBarco(id, barcoDetails);
 		    if (updatedBarco != null) {
 		        return ResponseEntity.ok(updatedBarco);
 		    } else {

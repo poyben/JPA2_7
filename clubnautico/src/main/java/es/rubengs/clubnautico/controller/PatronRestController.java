@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.rubengs.clubnautico.dto.PatronDto;
 import es.rubengs.clubnautico.model.Patron;
 import es.rubengs.clubnautico.model.Socio;
 import es.rubengs.clubnautico.service.PatronService;
@@ -30,7 +31,7 @@ public class PatronRestController {
 	
 	@GetMapping
 	public ResponseEntity<?> findAll() {
-		List<Patron> findAll = patronService.findAll();
+		List<PatronDto> findAll = patronService.findAllDTOs();
 		if (findAll != null) {
 			return ResponseEntity.ok(findAll);
 		} else {
@@ -41,7 +42,7 @@ public class PatronRestController {
 	@GetMapping("/{id}")
 	public ResponseEntity<?> findById(@PathVariable int id) {
 	
-		Patron optfindById = patronService.findById(id);
+		PatronDto optfindById = patronService.findByIdDTO(id);
 			
 				return ResponseEntity.ok(optfindById);
 			
@@ -49,7 +50,7 @@ public class PatronRestController {
 	
 	@PostMapping
 	@ResponseBody
-	public Patron createPatron(@RequestBody Patron patron) {
+	public PatronDto createPatron(@RequestBody PatronDto patron) {
 	    return patronService.createPatron(patron);
 	}
 
@@ -61,8 +62,8 @@ public class PatronRestController {
 
 	 
 	 @PutMapping("/{id}")
-	 public ResponseEntity<?> updatePatron(@PathVariable int id, @RequestBody Patron patronDetails) {
-		 Patron updatedPatron = patronService.updatePatron(id, patronDetails);
+	 public ResponseEntity<?> updatePatron(@PathVariable int id, @RequestBody PatronDto patronDetails) {
+		 PatronDto updatedPatron = patronService.updatePatron(id, patronDetails);
 		    if (updatedPatron != null) {
 		        return ResponseEntity.ok(updatedPatron);
 		    } else {
