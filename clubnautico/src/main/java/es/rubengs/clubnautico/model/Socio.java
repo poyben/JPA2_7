@@ -1,10 +1,15 @@
 package es.rubengs.clubnautico.model;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -13,6 +18,7 @@ import lombok.Setter;
 @Getter @Setter
 @Entity
 @Table(name = "socios")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Socio {
 
 	@Id
@@ -20,15 +26,15 @@ public class Socio {
 	int id;
 	String nombre;
 	String email;
-	@OneToMany
-    @JoinColumn(name = "barco_id", nullable = false)
-    private Barco barco;
+	@OneToMany(mappedBy = "socio")
+	//@JsonManagedReference
+    private List<Barco> barcos;
 	
-	public Socio(int id, String nombre, String email, Barco barco) {
+	public Socio(int id, String nombre, String email/*, List<Barco> barcos*/) {
 		this.id = id;
 		this.nombre = nombre;
 		this.email = email;
-		this.barco = barco;
+		//this.barcos = barcos;
 	}
 	
 	public Socio() {

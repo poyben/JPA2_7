@@ -1,5 +1,11 @@
 package es.rubengs.clubnautico.model;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,6 +21,7 @@ import lombok.Setter;
 @Getter @Setter
 @Entity
 @Table(name = "barcos")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Barco {
 
 	@Id
@@ -28,21 +35,21 @@ public class Barco {
 	float cuota;
 	@ManyToOne
     @JoinColumn(name = "socio_id", nullable = false)
+	//@JsonBackReference
     private Socio socio;
-	@OneToMany
-    @JoinColumn(name = "salida_id", nullable = false)
-    private Salida salida;
+	@OneToMany(mappedBy= "barco")
+    private List<Salida> salidas;
 	
 	
-	public Barco(int id, String numeroMatricula, String nombre, String numeroAmarre, float cuota, Socio socio,
-			Salida salida) {
+	public Barco(int id, String numeroMatricula, String nombre, String numeroAmarre, float cuota, Socio socio
+			/*,List<Salida> salidas*/) {
 		this.id = id;
 		this.numeroMatricula = numeroMatricula;
 		this.nombre = nombre;
 		this.numeroAmarre = numeroAmarre;
 		this.cuota = cuota;
 		this.socio = socio;
-		this.salida = salida;
+		//this.salidas = salidas;
 	}
 	public Barco() {
 	}

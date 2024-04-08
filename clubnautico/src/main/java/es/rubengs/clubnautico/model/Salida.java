@@ -21,6 +21,7 @@ public class Salida {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)	
 	int id;
+	@Column(name ="fecha_salida")
 	Date fechaSalida;
 	String destino;
 	float cuota;
