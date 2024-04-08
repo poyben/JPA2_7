@@ -37,6 +37,7 @@ public class PatronService {
         	Patron existingPatron = patronOptional.get();
             existingPatron.setNombre(patronDetails.getNombre());
             existingPatron.setEmail(patronDetails.getEmail());
+            existingPatron.setSalida(patronDetails.getSalida());
             Patron updatedPatron = patronRepo.save(existingPatron);
             return updatedPatron;
         } else {
