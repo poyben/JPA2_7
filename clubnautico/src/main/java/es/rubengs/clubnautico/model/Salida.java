@@ -27,6 +27,9 @@ public class Salida {
 	@ManyToOne
     @JoinColumn(name = "patron_id", nullable = false)
     private Patron patron;
+	@ManyToOne
+    @JoinColumn(name = "barco_id", nullable = false)
+    private Barco barco;
 	
 	public Salida(int id, Date fechaSalida, String destino, float cuota, Patron patron) {
 		this.id = id;
