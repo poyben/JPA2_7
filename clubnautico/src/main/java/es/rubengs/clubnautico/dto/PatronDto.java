@@ -3,19 +3,16 @@ package es.rubengs.clubnautico.dto;
 public class PatronDto {
 
 	private int id;
-    private String nombre;
-    private String email;
-    //private int salidaId;
-	
-    public PatronDto(int id, String nombre, String email/*, int salidaId*/) {
-        this.id = id;
-        this.nombre = nombre;
-        this.email = email;
-        //this.salidaId = salidaId;
-    }
+	private String nombre;
+	private String email;
+
+	public PatronDto(int id, String nombre, String email) {
+		this.id = id;
+		this.nombre = nombre;
+		this.email = email;
+	}
 
 	public PatronDto() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public int getId() {
@@ -41,15 +38,5 @@ public class PatronDto {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-/*
-	public int getSalidaId() {
-		return salidaId;
-	}
 
-	public void setSalidaId(int salidaId) {
-		this.salidaId = salidaId;
-	}
-    */
-    
-    
 }

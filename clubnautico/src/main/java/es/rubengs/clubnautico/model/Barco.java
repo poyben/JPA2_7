@@ -18,42 +18,41 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter
+@Getter
+@Setter
 @Entity
 @Table(name = "barcos")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Barco {
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)	
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int id;
-	@Column(name="numero_matricula")
+	@Column(name = "numero_matricula")
 	String numeroMatricula;
 	String nombre;
-	@Column(name="numero_amarre")
+	@Column(name = "numero_amarre")
 	int numeroAmarre;
-	float cuota;
+	double cuota;
 	@ManyToOne
-    @JoinColumn(name = "socio_id", nullable = false)
+	@JoinColumn(name = "socio_id")
 	@JsonBackReference
-    private Socio socio;
-	@OneToMany(mappedBy= "barco")
-    private List<Salida> salidas;
-	
-	
-	public Barco(int id, String numeroMatricula, String nombre, int numeroAmarre, float cuota, Socio socio
-			/*,List<Salida> salidas*/) {
+	private Socio socio;
+	@OneToMany(mappedBy = "barco")
+	private List<Salida> salidas;
+
+	public Barco(int id, String numeroMatricula, String nombre, int numeroAmarre, double cuota, Socio socio
+	/* ,List<Salida> salidas */) {
 		this.id = id;
 		this.numeroMatricula = numeroMatricula;
 		this.nombre = nombre;
 		this.numeroAmarre = numeroAmarre;
 		this.cuota = cuota;
 		this.socio = socio;
-		//this.salidas = salidas;
+		// this.salidas = salidas;
 	}
+
 	public Barco() {
 	}
-	
-	
-	
+
 }

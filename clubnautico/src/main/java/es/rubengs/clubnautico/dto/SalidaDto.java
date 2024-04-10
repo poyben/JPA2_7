@@ -2,26 +2,25 @@ package es.rubengs.clubnautico.dto;
 
 import java.util.Date;
 
-import es.rubengs.clubnautico.model.Barco;
-import es.rubengs.clubnautico.model.Patron;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class SalidaDto {
 
 	private int id;
-    private Date fechaSalida;
-    private String destino;
-    private float cuota;
-    private PatronDto patronDto;
-    private int barcoId; 
+	private Date fechaSalida;
+	private String destino;
+	private float cuota;
+	private PatronDto patronDto;
+	private int barcoId;
 
-    public SalidaDto(int id, Date fechaSalida, String destino, float cuota, PatronDto patronDto, int barcoId) {
-        this.id = id;
-        this.fechaSalida = fechaSalida;
-        this.destino = destino;
-        this.cuota = cuota;
-        this.patronDto = patronDto;
-        this.barcoId = barcoId;
-    }
+	public SalidaDto(int id, Date fechaSalida, String destino, float cuota, PatronDto patronDto, int barcoId) {
+		this.id = id;
+		this.fechaSalida = fechaSalida;
+		this.destino = destino;
+		this.cuota = cuota;
+		this.patronDto = patronDto;
+		this.barcoId = barcoId;
+	}
 
 	public int getId() {
 		return id;
@@ -73,7 +72,5 @@ public class SalidaDto {
 
 	public SalidaDto() {
 	}
-    
-    
-	
+
 }

@@ -28,7 +28,7 @@ public class PatronRestController {
 
 	@Autowired
 	PatronService patronService;
-	
+
 	@GetMapping
 	public ResponseEntity<?> findAll() {
 		List<PatronDto> findAll = patronService.findAllDTOs();
@@ -38,37 +38,35 @@ public class PatronRestController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Algo salio mal");
 		}
 	}
-	
+
 	@GetMapping("/{id}")
 	public ResponseEntity<?> findById(@PathVariable int id) {
-	
+
 		PatronDto optfindById = patronService.findByIdDTO(id);
-			
-				return ResponseEntity.ok(optfindById);
-			
+
+		return ResponseEntity.ok(optfindById);
+
 	}
-	
+
 	@PostMapping
 	@ResponseBody
 	public PatronDto createPatron(@RequestBody PatronDto patron) {
-	    return patronService.createPatron(patron);
+		return patronService.createPatron(patron);
 	}
 
-	
-	 @DeleteMapping("/{id}")
-	    public void deletePatron(@PathVariable int id) {
-	       	patronService.deletePatron(id);
-	    }
+	@DeleteMapping("/{id}")
+	public void deletePatron(@PathVariable int id) {
+		patronService.deletePatron(id);
+	}
 
-	 
-	 @PutMapping("/{id}")
-	 public ResponseEntity<?> updatePatron(@PathVariable int id, @RequestBody PatronDto patronDetails) {
-		 PatronDto updatedPatron = patronService.updatePatron(id, patronDetails);
-		    if (updatedPatron != null) {
-		        return ResponseEntity.ok(updatedPatron);
-		    } else {
-		        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patron no encontrado con ID: " + id);
-		    }
+	@PutMapping("/{id}")
+	public ResponseEntity<?> updatePatron(@PathVariable int id, @RequestBody PatronDto patronDetails) {
+		PatronDto updatedPatron = patronService.updatePatron(id, patronDetails);
+		if (updatedPatron != null) {
+			return ResponseEntity.ok(updatedPatron);
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patron no encontrado con ID: " + id);
 		}
-	
+	}
+
 }

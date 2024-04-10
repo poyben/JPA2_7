@@ -13,25 +13,26 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter
+@Getter
+@Setter
 @Entity
 @Table(name = "salidas")
 public class Salida {
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)	
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int id;
-	@Column(name ="fecha_salida")
+	@Column(name = "fecha_salida")
 	Date fechaSalida;
 	String destino;
 	float cuota;
 	@ManyToOne
-    @JoinColumn(name = "patron_id", nullable = false)
-    private Patron patron;
+	@JoinColumn(name = "patron_id", nullable = false)
+	private Patron patron;
 	@ManyToOne
-    @JoinColumn(name = "barco_id", nullable = false)
-    private Barco barco;
-	
+	@JoinColumn(name = "barco_id", nullable = false)
+	private Barco barco;
+
 	public Salida(int id, Date fechaSalida, String destino, float cuota, Patron patron) {
 		this.id = id;
 		this.fechaSalida = fechaSalida;
@@ -42,7 +43,5 @@ public class Salida {
 
 	public Salida() {
 	}
-	
-	
-	
+
 }

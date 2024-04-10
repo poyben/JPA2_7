@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import es.rubengs.clubnautico.model.Patron;
 
 @Repository
-public interface PatronRepository extends JpaRepository<Patron,Integer>{
+public interface PatronRepository extends JpaRepository<Patron, Integer> {
 
 }

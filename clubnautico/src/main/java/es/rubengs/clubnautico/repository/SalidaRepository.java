@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import es.rubengs.clubnautico.model.Salida;
 
-public interface SalidaRepository extends JpaRepository<Salida,Integer>{
+public interface SalidaRepository extends JpaRepository<Salida, Integer> {
 
 }

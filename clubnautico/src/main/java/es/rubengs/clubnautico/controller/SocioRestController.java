@@ -31,7 +31,7 @@ public class SocioRestController {
 	SocioService socioService;
 	@Autowired
 	BarcoService barcoService;
-	
+
 	@GetMapping
 	public ResponseEntity<?> findAll() {
 		List<SocioDto> findAll = socioService.findAll();
@@ -41,47 +41,46 @@ public class SocioRestController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Algo salio mal");
 		}
 	}
-	
+
 	@GetMapping("/{id}")
 	public ResponseEntity<?> findById(@PathVariable int id) {
-	
+
 		SocioDto optfindById = socioService.findById(id);
-			
-				return ResponseEntity.ok(optfindById);
-			
+
+		return ResponseEntity.ok(optfindById);
+
 	}
-	
+
 	@PostMapping
 	@ResponseBody
 	public SocioDto createSocio(@RequestBody SocioDto socio) {
-	    return socioService.createSocio(socio);
+		return socioService.createSocio(socio);
 	}
 
-	
-	 @DeleteMapping("/{id}")
-	    public void deleteSocio(@PathVariable int id) {
-	       	socioService.deleteSocio(id);
-	    }
+	@DeleteMapping("/{id}")
+	public void deleteSocio(@PathVariable int id) {
+		socioService.deleteSocio(id);
+	}
 
-	 
-	 @PutMapping("/{id}")
-	 public ResponseEntity<?> updateSocio(@PathVariable int id, @RequestBody Socio socioDetails) {
-		    Socio updatedSocio = socioService.updateSocio(id, socioDetails);
-		    if (updatedSocio != null) {
-		        return ResponseEntity.ok(updatedSocio);
-		    } else {
-		        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Socio no encontrado con ID: " + id);
-		    }
+	@PutMapping("/{id}")
+	public ResponseEntity<?> updateSocio(@PathVariable int id, @RequestBody Socio socioDetails) {
+		Socio updatedSocio = socioService.updateSocio(id, socioDetails);
+		if (updatedSocio != null) {
+			return ResponseEntity.ok(updatedSocio);
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Socio no encontrado con ID: " + id);
 		}
-	 
-	 @PostMapping("/{id}/barcos")
-	 public ResponseEntity<BarcoDto> addBarcoToSocio(@PathVariable(value = "id") Integer socioId, @RequestBody BarcoDto barcoDto) {
-	     BarcoDto nuevoBarco = barcoService.createBarcoWithSocio(socioId, barcoDto);
-	     if (nuevoBarco != null) {
-	         return new ResponseEntity<>(nuevoBarco, HttpStatus.CREATED);
-	     } else {
-	         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-	     }
-	 }
-	
+	}
+
+	@PostMapping("/{id}/barcos")
+	public ResponseEntity<BarcoDto> addBarcoToSocio(@PathVariable(value = "id") Integer socioId,
+			@RequestBody BarcoDto barcoDto) {
+		BarcoDto nuevoBarco = barcoService.createBarcoWithSocio(socioId, barcoDto);
+		if (nuevoBarco != null) {
+			return new ResponseEntity<>(nuevoBarco, HttpStatus.CREATED);
+		} else {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+
 }

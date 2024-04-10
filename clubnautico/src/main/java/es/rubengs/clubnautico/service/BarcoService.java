@@ -1,6 +1,7 @@
 package es.rubengs.clubnautico.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -13,7 +14,6 @@ import es.rubengs.clubnautico.dto.PatronDto;
 import es.rubengs.clubnautico.dto.SalidaDto;
 import es.rubengs.clubnautico.dto.SocioDto;
 import es.rubengs.clubnautico.model.Barco;
-import es.rubengs.clubnautico.model.Patron;
 import es.rubengs.clubnautico.model.Salida;
 import es.rubengs.clubnautico.model.Socio;
 import es.rubengs.clubnautico.repository.BarcoRepository;
@@ -22,147 +22,161 @@ import es.rubengs.clubnautico.repository.SocioRepository;
 @Service
 public class BarcoService {
 
-    @Autowired
-    BarcoRepository barcoRepo;
-    @Autowired
-    SocioRepository socioRepo;
+	@Autowired
+	BarcoRepository barcoRepo;
+	@Autowired
+	SocioRepository socioRepo;
 
-    public Barco createBarco(Barco barco) {
-        return barcoRepo.save(barco);
-    }
+	public BarcoDto createBarco(BarcoDto barcoDto) {
+		Barco barco = new Barco();
+		barco.setNombre(barcoDto.getNombre());
+		barco.setNumeroAmarre(barcoDto.getNumeroAmarre());
+		barco.setNumeroMatricula(barcoDto.getNumeroMatricula());
+		barco.setCuota(barcoDto.getCuota());
+		List<Salida> salidas = barcoDto.getSalidas().stream().map(this::convertSalidaDtoToEntity).collect(Collectors.toList());
+		barco.setSalidas(salidas);
+		Barco saved = barcoRepo.save(barco);
+		List<SalidaDto> salidasDto = saved.getSalidas().stream().map(this::convertSalidaToDto).collect(Collectors.toList());
+		return new BarcoDto(saved.getId(), saved.getNumeroMatricula(), saved.getNombre(),
+				saved.getCuota(), salidasDto, saved.getNumeroAmarre());
+	}
 
-    public void deleteBarco(int id) {
-        barcoRepo.deleteById(id);
-    }
+	public void deleteBarco(int id) {
+		barcoRepo.deleteById(id);
+	}
 
-    public List<BarcoDto> findAll() {
-        return barcoRepo.findAll().stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
-    }
+	public List<BarcoDto> findAll() {
+		return barcoRepo.findAll().stream().map(this::convertToDto).collect(Collectors.toList());
+	}
 
-    public BarcoDto findById(int id) {
-        return barcoRepo.findById(id)
-                .map(this::convertToDto)
-                .orElse(null);
-    }
+	public BarcoDto findById(int id) {
+		return barcoRepo.findById(id).map(this::convertToDto).orElse(null);
+	}
 
-    public BarcoDto updateBarco(int id, BarcoDto barcoDetails) {
+	public BarcoDto updateBarco(int id, BarcoDto barcoDetails) {
+		Optional<Barco> barcoOptional = barcoRepo.findById(id);
+		if (barcoOptional.isPresent()) {
+			Barco existingBarco = barcoOptional.get();
+			existingBarco.setNombre(barcoDetails.getNombre());
+			existingBarco.setCuota(barcoDetails.getCuota());
+			List<Salida> salidas = barcoDetails.getSalidas().stream()
+					.map(salidaDto -> convertSalidaDtoToEntity(salidaDto)).collect(Collectors.toList());
+
+			existingBarco.setSalidas(salidas);
+
+			existingBarco.setNumeroAmarre(barcoDetails.getNumeroAmarre());
+			existingBarco.setNumeroMatricula(barcoDetails.getNumeroMatricula());
+			Barco updatedBarco = barcoRepo.save(existingBarco);
+
+			List<SalidaDto> salidasDto = salidas.stream().map(salida -> convertSalidaToDto(salida))
+					.collect(Collectors.toList());
+
+			return new BarcoDto(updatedBarco.getId(), updatedBarco.getNumeroMatricula(), updatedBarco.getNombre(),
+					barcoDetails.getCuota(), salidasDto, updatedBarco.getNumeroAmarre(), barcoDetails.getSocioDto());
+		} else {
+			return null;
+		}
+	}
+
+	private Salida convertSalidaDtoToEntity(SalidaDto salidaDto) {
+		Salida salida = new Salida();
+		salida.setCuota(salidaDto.getCuota());
+		salida.setDestino(salidaDto.getDestino());
+		salida.setFechaSalida(salidaDto.getFechaSalida());
+		return salida;
+	}
+
+	private SalidaDto convertSalidaToDto(Salida salida) {
+		PatronDto patronDto = null;
+		if (salida.getPatron() != null) {
+			patronDto = new PatronDto(salida.getPatron().getId(), salida.getPatron().getNombre(),
+					salida.getPatron().getEmail());
+		}
+
+		return new SalidaDto(salida.getId(), salida.getFechaSalida(), salida.getDestino(), salida.getCuota(), patronDto,
+				salida.getBarco() != null ? salida.getBarco().getId() : null);
+	}
+
+	private BarcoDto convertToDto(Barco barco) {
+		BarcoDto barcoDto = new BarcoDto();
+		barcoDto.setId(barco.getId());
+		barcoDto.setNumeroMatricula(barco.getNumeroMatricula());
+		barcoDto.setNombre(barco.getNombre());
+		barcoDto.setNumeroAmarre(barco.getNumeroAmarre());
+		barcoDto.setCuota(barco.getCuota());
+
+		if (barco.getSocio() != null) {
+			SocioDto socioDto = new SocioDto();
+			socioDto.setId(barco.getSocio().getId());
+			socioDto.setNombre(barco.getSocio().getNombre());
+			socioDto.setEmail(barco.getSocio().getEmail());
+			barcoDto.setSocioDto(socioDto);
+		} else {
+			SocioDto socioDto = new SocioDto();
+			barcoDto.setSocioDto(socioDto);
+		}
+
+		List<SalidaDto> salidasDto = null;
+		if (barco.getSalidas() != null && !barco.getSalidas().isEmpty()) {
+			salidasDto = barco.getSalidas().stream().map(this::convertSalidaToDto).collect(Collectors.toList());
+		}
+		barcoDto.setSalidas(salidasDto);
+
+		return barcoDto;
+	}
+
+	public BarcoDto createBarcoWithSocio(Integer socioId, BarcoDto barcoDto) {
+		Socio socio = socioRepo.findById(socioId)
+				.orElseThrow(() -> new NoSuchElementException("Socio no encontrado con ID: " + socioId));
+
+		Barco barco = convertToEntity(barcoDto);
+		barco.setSocio(socio);
+
+		socio.getBarcos().add(barco);
+
+		Barco savedBarco = barcoRepo.save(barco);
+		return convertToDto(savedBarco);
+	}
+
+	private Barco convertToEntity(BarcoDto barcoDto) {
+		Barco barco = new Barco();
+		barco.setNumeroMatricula(barcoDto.getNumeroMatricula());
+		barco.setNombre(barcoDto.getNombre());
+		barco.setNumeroAmarre(barcoDto.getNumeroAmarre());
+		barco.setCuota(barcoDto.getCuota());
+		return barco;
+	}
+	
+	
+	public BarcoDto partialUpdateBarco(int id, Map<String, Object> updates) {
         Optional<Barco> barcoOptional = barcoRepo.findById(id);
         if (barcoOptional.isPresent()) {
             Barco existingBarco = barcoOptional.get();
-            existingBarco.setNombre(barcoDetails.getNombre());
-            existingBarco.setCuota(barcoDetails.getCuota());
 
-            // Convertir la lista de SalidaDto a una lista de Salida
-            List<Salida> salidas = barcoDetails.getSalidas().stream()
-                    .map(salidaDto -> convertSalidaDtoToEntity(salidaDto))
-                    .collect(Collectors.toList());
+            updates.forEach((key, value) -> {
+                switch (key) {
+                    case "nombre":
+                        existingBarco.setNombre((String) value);
+                        break;
+                    case "cuota":
+                        existingBarco.setCuota((double) value);
+                        break;
+                    case "numeroAmarre":
+                        existingBarco.setNumeroAmarre((int) value);
+                        break;
+                    case "numeroMatricula":
+                        existingBarco.setNumeroMatricula((String) value);
+                        break;
+                    default:
+                        break;
+                }
+            });
 
-            existingBarco.setSalidas(salidas);
-
-            existingBarco.setNumeroAmarre(barcoDetails.getNumeroAmarre());
-            existingBarco.setNumeroMatricula(barcoDetails.getNumeroMatricula());
             Barco updatedBarco = barcoRepo.save(existingBarco);
-
-            // Convertir la lista de Salida a una lista de SalidaDto
-            List<SalidaDto> salidasDto = salidas.stream()
-                    .map(salida -> convertSalidaToDto(salida))
-                    .collect(Collectors.toList());
-
-            return new BarcoDto(
-                    updatedBarco.getId(),
-                    updatedBarco.getNumeroMatricula(),
-                    updatedBarco.getNombre(),
-                    barcoDetails.getCuota(),
-                    salidasDto,
-                    updatedBarco.getNumeroAmarre(),
-                    barcoDetails.getSocioDto()
-            );
+            return convertToDto(updatedBarco);
         } else {
             return null;
         }
     }
-
-    // Método para convertir SalidaDto a Salida
-    private Salida convertSalidaDtoToEntity(SalidaDto salidaDto) {
-        Salida salida = new Salida();
-        // Aquí debes asignar los atributos correspondientes
-        return salida;
-    }
-
-    // Método para convertir Salida a SalidaDto
-    private SalidaDto convertSalidaToDto(Salida salida) {
-        PatronDto patronDto = null;
-        if (salida.getPatron() != null) {
-            patronDto = new PatronDto(
-                    salida.getPatron().getId(),
-                    salida.getPatron().getNombre(),
-                    salida.getPatron().getEmail()
-            );
-        }
-
-        return new SalidaDto(
-                salida.getId(),
-                salida.getFechaSalida(),
-                salida.getDestino(),
-                salida.getCuota(),
-                patronDto,
-                salida.getBarco() != null ? salida.getBarco().getId() : null
-        );
-    }
-
-    private BarcoDto convertToDto(Barco barco) {
-        BarcoDto barcoDto = new BarcoDto();
-        barcoDto.setId(barco.getId());
-        barcoDto.setNumeroMatricula(barco.getNumeroMatricula());
-        barcoDto.setNombre(barco.getNombre());
-        barcoDto.setNumeroAmarre(barco.getNumeroAmarre());
-        barcoDto.setCuota(barco.getCuota());
-
-        // Verificar si el barco tiene un socio asociado
-        if (barco.getSocio() != null) {
-            SocioDto socioDto = new SocioDto();
-            socioDto.setId(barco.getSocio().getId());
-            socioDto.setNombre(barco.getSocio().getNombre());
-            socioDto.setEmail(barco.getSocio().getEmail());
-            barcoDto.setSocioDto(socioDto);
-        } else {
-            // Si el barco no tiene asociado un socio, puedes establecer el socioDto como un objeto SocioDto vacío o null según tu preferencia
-            SocioDto socioDto = new SocioDto(); // o socioDto = null;
-            barcoDto.setSocioDto(socioDto);
-        }
-
-        List<SalidaDto> salidasDto = null;
-        if (barco.getSalidas() != null && !barco.getSalidas().isEmpty()) {
-            salidasDto = barco.getSalidas().stream().map(this::convertSalidaToDto).collect(Collectors.toList());
-        }
-        barcoDto.setSalidas(salidasDto);
-
-        return barcoDto;
-    }
-
-    public BarcoDto createBarcoWithSocio(Integer socioId, BarcoDto barcoDto) {
-        Socio socio = socioRepo.findById(socioId)
-                .orElseThrow(() -> new NoSuchElementException("Socio no encontrado con ID: " + socioId));
-
-        Barco barco = convertToEntity(barcoDto);
-        barco.setSocio(socio); // Establecer el socio en el barco
-
-        // Establecer el barco en el socio
-        socio.getBarcos().add(barco);
-
-        Barco savedBarco = barcoRepo.save(barco);
-        return convertToDto(savedBarco);
-    }
-
-    private Barco convertToEntity(BarcoDto barcoDto) {
-        Barco barco = new Barco();
-        barco.setNumeroMatricula(barcoDto.getNumeroMatricula());
-        barco.setNombre(barcoDto.getNombre());
-        barco.setNumeroAmarre(barcoDto.getNumeroAmarre());
-        barco.setCuota(barcoDto.getCuota());
-        // No establecer socio aquí, ya que se hace en otro lugar
-        return barco;
-    }
+	
 }
