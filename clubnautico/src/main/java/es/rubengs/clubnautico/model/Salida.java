@@ -33,15 +33,8 @@ public class Salida {
 	@JoinColumn(name = "barco_id", nullable = false)
 	private Barco barco;
 
-	public Salida(int id, Date fechaSalida, String destino, float cuota, Patron patron) {
-		this.id = id;
-		this.fechaSalida = fechaSalida;
-		this.destino = destino;
-		this.cuota = cuota;
-		this.patron = patron;
-	}
-
 	public Salida() {
+   // Default constructor
 	}
 
 }

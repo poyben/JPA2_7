@@ -55,8 +55,7 @@ public class SalidaRestController {
 	}
 	*/
 	
-	@PostMapping("/{barcoId}/{patronId}")
-	@ResponseBody
+	@PostMapping("/barco/{barcoId}/patron/{patronId}")
 	public SalidaDto createSalida(@PathVariable int barcoId, @PathVariable int patronId, @RequestBody SalidaDto salidaDto) {
 	    return salidaService.createSalida(barcoId, patronId, salidaDto);
 	}

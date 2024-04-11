@@ -29,7 +29,7 @@ public class SocioService {
 		socio.setEmail(socioDto.getEmail());
 
 		if (socioDto.getBarcos() != null) {
-	        List<Barco> barcos = socioDto.getBarcos().stream().map(this::convertDtoToBarco).collect(Collectors.toList());
+	        List<Barco> barcos = socioDto.getBarcos().stream().map(this::convertDtoToBarco).toList();
 	        socio.setBarcos(barcos);
 	    } else {
 	        socio.setBarcos(new ArrayList<>()); 
@@ -38,7 +38,7 @@ public class SocioService {
 		Socio savedSocio = socioRepo.save(socio);
 
 		List<BarcoDto> barcosDto = savedSocio.getBarcos().stream().map(this::convertBarcoToDto)
-				.collect(Collectors.toList());
+				.toList();
 
 		return new SocioDto(savedSocio.getId(), savedSocio.getNombre(), savedSocio.getEmail(), barcosDto);
 	}
@@ -48,7 +48,7 @@ public class SocioService {
 	}
 
 	public List<SocioDto> findAll() {
-		return socioRepo.findAll().stream().map(this::convertToDto).collect(Collectors.toList());
+		return socioRepo.findAll().stream().map(this::convertToDto).toList();
 	}
 
 	public SocioDto findById(int id) {
@@ -61,8 +61,7 @@ public class SocioService {
 			Socio existingSocio = socioOptional.get();
 			existingSocio.setNombre(socioDetails.getNombre());
 			existingSocio.setEmail(socioDetails.getEmail());
-			Socio updatedSocio = socioRepo.save(existingSocio);
-			return updatedSocio;
+			return socioRepo.save(existingSocio);
 		} else {
 			return null;
 		}
@@ -74,9 +73,8 @@ public class SocioService {
 		socioDto.setNombre(socio.getNombre());
 		socioDto.setEmail(socio.getEmail());
 
-		socio.getBarcos().size();
 
-		List<BarcoDto> barcosDto = socio.getBarcos().stream().map(this::convertBarcoToDto).collect(Collectors.toList());
+		List<BarcoDto> barcosDto = socio.getBarcos().stream().map(this::convertBarcoToDto).toList();
 
 		socioDto.setBarcos(barcosDto);
 
@@ -94,19 +92,6 @@ public class SocioService {
 		return barcoDto;
 	}
 
-	private SalidaDto convertSalidaToDto(Salida salida) {
-		PatronDto patronDto = null;
-		if (salida.getPatron() != null) {
-			patronDto = new PatronDto(salida.getPatron().getId(), salida.getPatron().getNombre(),
-					salida.getPatron().getEmail());
-		}
-
-		int barcoId = salida.getBarco() != null ? salida.getBarco().getId() : 0;
-
-		return new SalidaDto(salida.getId(), salida.getFechaSalida(), salida.getDestino(), salida.getCuota(), patronDto,
-				barcoId);
-	}
-
 	private Barco convertDtoToBarco(BarcoDto barcoDto) {
 		Barco barco = new Barco();
 		barco.setId(barcoDto.getId());
@@ -118,12 +103,4 @@ public class SocioService {
 		return barco;
 	}
 
-	public SocioDto convertToDto(Optional<Socio> optionalSocio) {
-		if (optionalSocio.isPresent()) { 
-	        Socio socio = optionalSocio.get(); 
-	        return convertToDto(socio); 
-	    } else {
-	        return null;
-	    }
-	}
 }

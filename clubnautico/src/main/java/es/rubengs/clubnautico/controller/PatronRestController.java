@@ -49,7 +49,6 @@ public class PatronRestController {
 	}
 
 	@PostMapping
-	@ResponseBody
 	public PatronDto createPatron(@RequestBody PatronDto patron) {
 		return patronService.createPatron(patron);
 	}

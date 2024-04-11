@@ -41,18 +41,8 @@ public class Barco {
 	@OneToMany(mappedBy = "barco")
 	private List<Salida> salidas;
 
-	public Barco(int id, String numeroMatricula, String nombre, int numeroAmarre, double cuota, Socio socio
-	/* ,List<Salida> salidas */) {
-		this.id = id;
-		this.numeroMatricula = numeroMatricula;
-		this.nombre = nombre;
-		this.numeroAmarre = numeroAmarre;
-		this.cuota = cuota;
-		this.socio = socio;
-		// this.salidas = salidas;
-	}
-
 	public Barco() {
+   // Default constructor
 	}
 
 }

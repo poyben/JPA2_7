@@ -32,14 +32,8 @@ public class Socio {
 	@JsonManagedReference
 	private List<Barco> barcos;
 
-	public Socio(int id, String nombre, String email, List<Barco> barcos) {
-		this.id = id;
-		this.nombre = nombre;
-		this.email = email;
-		this.barcos = barcos;
-	}
-
 	public Socio() {
+		//Default constructor
 	}
 
 }

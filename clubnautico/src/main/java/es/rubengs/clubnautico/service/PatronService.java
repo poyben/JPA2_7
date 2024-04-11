@@ -32,7 +32,7 @@ public class PatronService {
 	public List<PatronDto> findAllDTOs() {
 		List<Patron> patrons = patronRepo.findAll();
 		return patrons.stream().map(patron -> new PatronDto(patron.getId(), patron.getNombre(), patron.getEmail()))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	public PatronDto findByIdDTO(int id) {

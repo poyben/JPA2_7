@@ -31,16 +31,6 @@ public class BarcoDto {
 		this.salidas = new ArrayList<>();
 	}
 
-	public BarcoDto(int id, String numeroMatricula, String nombre, List<SalidaDto> salidas, int numeroAmarre,
-			double cuota) {
-		this.id = id;
-		this.numeroMatricula = numeroMatricula;
-		this.nombre = nombre;
-		this.salidas = salidas;
-		this.numeroAmarre = numeroAmarre;
-		this.cuota = cuota;
-	}
-
 	public BarcoDto(int id, String numeroMatricula, String nombre, double cuota, List<SalidaDto> salidas,
 			int numeroAmarre) {
 		this.id = id;

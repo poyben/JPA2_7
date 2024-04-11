@@ -33,10 +33,10 @@ public class BarcoService {
 		barco.setNumeroAmarre(barcoDto.getNumeroAmarre());
 		barco.setNumeroMatricula(barcoDto.getNumeroMatricula());
 		barco.setCuota(barcoDto.getCuota());
-		List<Salida> salidas = barcoDto.getSalidas().stream().map(this::convertSalidaDtoToEntity).collect(Collectors.toList());
+		List<Salida> salidas = barcoDto.getSalidas().stream().map(this::convertSalidaDtoToEntity).toList();
 		barco.setSalidas(salidas);
 		Barco saved = barcoRepo.save(barco);
-		List<SalidaDto> salidasDto = saved.getSalidas().stream().map(this::convertSalidaToDto).collect(Collectors.toList());
+		List<SalidaDto> salidasDto = saved.getSalidas().stream().map(this::convertSalidaToDto).toList();
 		return new BarcoDto(saved.getId(), saved.getNumeroMatricula(), saved.getNombre(),
 				saved.getCuota(), salidasDto, saved.getNumeroAmarre());
 	}
@@ -46,7 +46,7 @@ public class BarcoService {
 	}
 
 	public List<BarcoDto> findAll() {
-		return barcoRepo.findAll().stream().map(this::convertToDto).collect(Collectors.toList());
+		return barcoRepo.findAll().stream().map(this::convertToDto).toList();
 	}
 
 	public BarcoDto findById(int id) {
@@ -60,7 +60,7 @@ public class BarcoService {
 			existingBarco.setNombre(barcoDetails.getNombre());
 			existingBarco.setCuota(barcoDetails.getCuota());
 			List<Salida> salidas = barcoDetails.getSalidas().stream()
-					.map(salidaDto -> convertSalidaDtoToEntity(salidaDto)).collect(Collectors.toList());
+					.map(this::convertSalidaDtoToEntity).toList();
 
 			existingBarco.setSalidas(salidas);
 
@@ -68,8 +68,8 @@ public class BarcoService {
 			existingBarco.setNumeroMatricula(barcoDetails.getNumeroMatricula());
 			Barco updatedBarco = barcoRepo.save(existingBarco);
 
-			List<SalidaDto> salidasDto = salidas.stream().map(salida -> convertSalidaToDto(salida))
-					.collect(Collectors.toList());
+			List<SalidaDto> salidasDto = salidas.stream().map(this::convertSalidaToDto)
+					.toList();
 
 			return new BarcoDto(updatedBarco.getId(), updatedBarco.getNumeroMatricula(), updatedBarco.getNombre(),
 					barcoDetails.getCuota(), salidasDto, updatedBarco.getNumeroAmarre(), barcoDetails.getSocioDto());
@@ -82,7 +82,6 @@ public class BarcoService {
 		Salida salida = new Salida();
 		salida.setCuota(salidaDto.getCuota());
 		salida.setDestino(salidaDto.getDestino());
-		salida.setFechaSalida(salidaDto.getFechaSalida());
 		return salida;
 	}
 
@@ -118,7 +117,7 @@ public class BarcoService {
 
 		List<SalidaDto> salidasDto = null;
 		if (barco.getSalidas() != null && !barco.getSalidas().isEmpty()) {
-			salidasDto = barco.getSalidas().stream().map(this::convertSalidaToDto).collect(Collectors.toList());
+			salidasDto = barco.getSalidas().stream().map(this::convertSalidaToDto).toList();
 		}
 		barcoDto.setSalidas(salidasDto);
 

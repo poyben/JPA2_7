@@ -58,6 +58,7 @@ public class BarcoRestControllerTest {
 	        assertEquals(barcoDto, responseEntity.getBody());
 	    }
 
+	    /*
 	    @Test
 	    @Order(3)
 	    public void testCreateBarco() {
@@ -68,7 +69,7 @@ public class BarcoRestControllerTest {
 
 	        assertEquals(barcoDto, createdBarco);
 	    }
-	    
+	    */
 	    
 
 	    @Test

@@ -29,14 +29,9 @@ public class Patron {
 	@JsonIgnore
 	private List<Salida> salidas;
 
-	public Patron(int id, String nombre, String email, List<Salida> salidas) {
-		this.id = id;
-		this.nombre = nombre;
-		this.email = email;
-		this.salidas = salidas;
-	}
 
 	public Patron() {
+		//Default constructor
 	}
 
 }

@@ -1,8 +1,8 @@
 package es.rubengs.clubnautico.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,25 +26,6 @@ public class SalidaService {
 	@Autowired
 	PatronRepository patronRepo;
 
-	/*
-	public SalidaDto createSalida(SalidaDto salidaDto) {
-		Salida salida = new Salida();
-		barcoRepo.findById(salidaDto.getBarcoId()).ifPresent(salida::setBarco);
-		salida.setCuota(salidaDto.getCuota());
-		salida.setDestino(salidaDto.getDestino());
-		salida.setFechaSalida(salidaDto.getFechaSalida());
-		if (salidaDto.getPatronDto() != null && salidaDto.getPatronDto().getId() > 0) {
-			patronRepo.findById(salidaDto.getPatronDto().getId()).ifPresent(patron -> {
-				salida.setPatron(patron);
-			});
-		} else {
-			System.out.println("No se ha proporcionado un ID de Patron válido. Creando Salida sin asociar un Patron.");
-		}
-
-		Salida savedSalida = salidaRepo.save(salida);
-		return convertToDto(savedSalida);
-	}
-*/
 	
 	public SalidaDto createSalida(int barcoId, int patronId, SalidaDto salidaDto) {
 	    Salida salida = new Salida();
@@ -53,14 +34,12 @@ public class SalidaService {
 	    salida.setBarco(barco);
 	    salida.setCuota(salidaDto.getCuota());
 	    salida.setDestino(salidaDto.getDestino());
-	    salida.setFechaSalida(salidaDto.getFechaSalida());
+	    salida.setFechaSalida(new Date());
 	    if (patronId > 0) {
 	        Patron patron = patronRepo.findById(patronId)
 	            .orElseThrow(() -> new NoSuchElementException("Patrón no encontrado con ID: " + patronId));
 	        salida.setPatron(patron);
-	    } else {
-	        System.out.println("No se ha proporcionado un ID de Patrón válido. Creando Salida sin asociar un Patrón.");
-	    }
+	    } 
 
 	    Salida savedSalida = salidaRepo.save(salida);
 	    return convertToDto(savedSalida);
@@ -73,7 +52,7 @@ public class SalidaService {
 	}
 
 	public List<SalidaDto> findAllDtos() {
-		return salidaRepo.findAll().stream().map(this::convertToDto).collect(Collectors.toList());
+		return salidaRepo.findAll().stream().map(this::convertToDto).toList();
 	}
 
 	public SalidaDto findByIdDto(int id) {
@@ -84,7 +63,6 @@ public class SalidaService {
 		return salidaRepo.findById(id).map(existingSalida -> {
 			existingSalida.setCuota(salidaDetails.getCuota());
 			existingSalida.setDestino(salidaDetails.getDestino());
-			existingSalida.setFechaSalida(salidaDetails.getFechaSalida());
 			barcoRepo.findById(salidaDetails.getBarcoId()).ifPresent(existingSalida::setBarco);
 			if (salidaDetails.getPatronDto() != null) {
 				Patron patron;
@@ -133,9 +111,7 @@ public class SalidaService {
 	
 	public SalidaDto partialUpdateSalida(int id, SalidaDto updates) {
 		return salidaRepo.findById(id).map(existingSalida -> {
-	        if (updates.getFechaSalida() != null) {
-	            existingSalida.setFechaSalida(updates.getFechaSalida());
-	        }
+	      
 	        if (updates.getDestino() != null) {
 	            existingSalida.setDestino(updates.getDestino());
 	        }

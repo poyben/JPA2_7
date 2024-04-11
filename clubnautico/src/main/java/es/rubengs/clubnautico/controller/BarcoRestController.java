@@ -53,18 +53,9 @@ public class BarcoRestController {
 		return ResponseEntity.ok(optfindById);
 
 	}
-	
-	@PostMapping
-	@ResponseBody
-	public BarcoDto createBarco(@RequestBody BarcoDto barcoDto) {
-		return barcoService.createBarco(barcoDto);
-	}
 
 	@PostMapping("{socioId}")
-	@ResponseBody
 	public BarcoDto createBarco(@PathVariable int socioId,@RequestBody BarcoDto barcoDto) {
-		//SocioDto socioDto = socioService.convertToDto(socioRepository.findById(socioId));
-		//barcoDto.setSocioDto(socioDto);
 		return barcoService.createBarcoWithSocio(socioId, barcoDto);
 	}
 	
